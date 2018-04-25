@@ -8,6 +8,7 @@ import Day from "../src/day";
 import TestWrapper from "./test_wrapper.jsx";
 import PopperComponent from "../src/popper_component.jsx";
 import TimezoneDatePicker from "./timezone_date_picker.jsx";
+import CustomInput from "./helper_components/custom_input.jsx";
 import * as utils from "../src/date_utils";
 
 function getKey(key) {
@@ -226,7 +227,7 @@ describe("DatePicker", () => {
     ).to.equal(utils.formatDate(data.copyM, data.testFormat));
   });
 
-  xit("should update the preSelection state when a day is selected with mouse click", () => {
+  it("should update the preSelection state when a day is selected with mouse click", () => {
     // Note: We need monthsShown=2 so that today can still be clicked when
     // ArrowLeft selects the previous month. (On the 1st 2 days of the month.)
     var data = getOnInputKeyDownStuff({
@@ -302,6 +303,17 @@ describe("DatePicker", () => {
     );
   });
 
+  it("should set the type attribute on the clear button to button", () => {
+    var datePicker = TestUtils.renderIntoDocument(
+      <DatePicker selected={utils.newDate("2015-12-15")} isClearable />
+    );
+    var clearButton = TestUtils.findRenderedDOMComponentWithClass(
+      datePicker,
+      "react-datepicker__close-icon"
+    );
+    expect(clearButton.type).to.equal("button");
+  });
+
   it("should allow clearing the date when isClearable is true", () => {
     var cleared = false;
     function handleChange(d) {
@@ -334,6 +346,21 @@ describe("DatePicker", () => {
     );
     TestUtils.Simulate.click(clearButton);
     expect(datePicker.state.inputValue).to.be.null;
+  });
+
+  it("should set the title attribute on the clear button if clearButtonTitle is supplied", () => {
+    const datePicker = TestUtils.renderIntoDocument(
+      <DatePicker
+        selected={utils.newDate("2018-03-19")}
+        isClearable
+        clearButtonTitle="clear button"
+      />
+    );
+    const clearButtonText = TestUtils.findRenderedDOMComponentWithClass(
+      datePicker,
+      "react-datepicker__close-icon"
+    ).getAttribute("title");
+    expect(clearButtonText).to.equal("clear button");
   });
 
   it("should save time from the selected date", () => {
@@ -750,6 +777,7 @@ describe("DatePicker", () => {
     expect(datePicker.find("input").prop("value")).to.equal("");
 
     const str = "12/30/1982";
+    datePicker.find("input").simulate("focus");
     str.split("").forEach((c, i) => {
       datePicker.find("input").simulate("change", {
         target: { value: datePicker.find("input").prop("value") + c }
@@ -791,7 +819,44 @@ describe("DatePicker", () => {
     datePicker.update();
     expect(datePicker.find("input").prop("value")).to.equal("1");
   });
-
+  it("should call onChangeRaw with all arguments", () => {
+    const inputValue = "test";
+    const onChangeRawSpy = sandbox.spy();
+    const datePicker = TestUtils.renderIntoDocument(
+      <DatePicker
+        selected={utils.newDate()}
+        onChange={sandbox.spy()}
+        customInput={<CustomInput />}
+        onChangeRaw={onChangeRawSpy}
+      />
+    );
+    expect(onChangeRawSpy.called).to.be.false;
+    const input = ReactDOM.findDOMNode(datePicker.input);
+    input.value = inputValue;
+    TestUtils.Simulate.change(input);
+    expect(onChangeRawSpy.calledOnce).to.be.true;
+    expect(onChangeRawSpy.args[0][0].target.value).to.equal(inputValue);
+    expect(onChangeRawSpy.args[0][1]).to.equal("test");
+  });
+  it("should handle the lack of an 'event' object as the first argument to handleChange analogously to 'preventDefault' being called", () => {
+    const inputValue = "test";
+    const onChangeRawSpy = sandbox.spy();
+    let customInput = <CustomInput onChangeArgs={e => [e.target.value]} />;
+    const datePicker = TestUtils.renderIntoDocument(
+      <DatePicker
+        selected={utils.newDate()}
+        onChange={sandbox.spy()}
+        customInput={customInput}
+        onChangeRaw={onChangeRawSpy}
+      />
+    );
+    expect(onChangeRawSpy.called).to.be.false;
+    const input = ReactDOM.findDOMNode(datePicker.input);
+    input.value = inputValue;
+    TestUtils.Simulate.change(input);
+    expect(onChangeRawSpy.calledOnce).to.be.true;
+    expect(onChangeRawSpy.args[0][0]).to.equal("test");
+  });
   it("should handle a click outside of the calendar", () => {
     const datePicker = mount(
       <DatePicker selected={utils.newDate()} withPortal />
@@ -876,6 +941,36 @@ describe("DatePicker", () => {
       utils.formatDate(datePicker.state("preSelection"), "YYYY-MM-DD")
     ).to.equal(utils.formatDate(future, "YYYY-MM-DD"));
   });
+  it("should switch month in inline mode immediately, when year is updated", () => {
+    const selected = utils.newDate();
+    const future = utils.addYears(utils.newDate(), 1);
+    const datePicker = mount(<DatePicker inline selected={selected} />);
+    expect(
+      utils.formatDate(datePicker.state("preSelection"), "YYYY-MM-DD")
+    ).to.equal(utils.formatDate(selected, "YYYY-MM-DD"));
+    datePicker.setProps({ selected: future });
+    expect(
+      utils.formatDate(datePicker.state("preSelection"), "YYYY-MM-DD")
+    ).to.equal(utils.formatDate(future, "YYYY-MM-DD"));
+  });
+
+  it("should not switch months in inline mode when a day is clicked", () => {
+    const selected = utils.newDate();
+    const datePicker = TestUtils.renderIntoDocument(
+      <DatePicker inline selected={selected} monthsShown={2} />
+    );
+    expect(
+      utils.formatDate(datePicker.state.preSelection, "YYYY-MM-DD")
+    ).to.equal(utils.formatDate(selected, "YYYY-MM-DD"));
+
+    let days = TestUtils.scryRenderedComponentsWithType(datePicker, Day);
+    let nextMonthDay = days.find(d => d.props.month !== selected.month());
+    TestUtils.Simulate.click(ReactDOM.findDOMNode(nextMonthDay));
+    expect(
+      utils.formatDate(datePicker.state.preSelection, "YYYY-MM-DD")
+    ).to.equal(utils.formatDate(selected, "YYYY-MM-DD"));
+  });
+
   it("should not set open state when focusing on the date input and the preventOpenOnFocus prop is set", () => {
     const datePicker = TestUtils.renderIntoDocument(
       <DatePicker preventOpenOnFocus />

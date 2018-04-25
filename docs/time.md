@@ -5,6 +5,7 @@
 | `excludeTimes` | `array`  |               |             |
 | `format`       | `string` |               |             |
 | `includeTimes` | `array`  |               |             |
+| `injectTimes`  | `array`  |               |             |
 | `intervals`    | `number` | `30`          |             |
 | `maxTime`      | `object` |               |             |
 | `minTime`      | `object` |               |             |
@@ -12,4 +13,5 @@
 | `onChange`     | `func`   |               |             |
 | `onTimeChange` |          | `() => {}`    |             |
 | `selected`     | `object` |               |             |
+| `timeCaption`  | `string` | `"Time"`      |             |
 | `todayButton`  | `string` | `null`        |             |

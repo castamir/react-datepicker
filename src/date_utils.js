@@ -197,6 +197,10 @@ export function addMinutes(date, amount) {
   return add(date, amount, "minutes");
 }
 
+export function addHours(date, amount) {
+  return add(date, amount, "hours");
+}
+
 export function addDays(date, amount) {
   return add(date, amount, "days");
 }
@@ -246,17 +250,17 @@ export function equals(date1, date2) {
 
 export function isSameYear(date1, date2) {
   if (date1 && date2) {
-      return date1.isSame(date2, "year");
+    return date1.isSame(date2, "year");
   } else {
-      return !date1 && !date2;
+    return !date1 && !date2;
   }
 }
 
 export function isSameMonth(date1, date2) {
   if (date1 && date2) {
-      return date1.isSame(date2, "month");
+    return date1.isSame(date2, "month");
   } else {
-      return !date1 && !date2;
+    return !date1 && !date2;
   }
 }
 
@@ -321,6 +325,10 @@ export function getLocaleData(date) {
 
 export function getLocaleDataForLocale(locale) {
   return moment.localeData(locale);
+}
+
+export function getFormattedWeekdayInLocale(locale, date, formatFunc) {
+  return formatFunc(locale.weekdays(date));
 }
 
 export function getWeekdayMinInLocale(locale, date) {
@@ -489,4 +497,31 @@ export function getHightLightDaysMap(
   }
 
   return dateClasses;
+}
+
+export function timesToInjectAfter(
+  startOfDay,
+  currentTime,
+  currentMultiplier,
+  intervals,
+  injectedTimes
+) {
+  const l = injectedTimes.length;
+  const times = [];
+  for (let i = 0; i < l; i++) {
+    const injectedTime = addMinutes(
+      addHours(cloneDate(startOfDay), getHour(injectedTimes[i])),
+      getMinute(injectedTimes[i])
+    );
+    const nextTime = addMinutes(
+      cloneDate(startOfDay),
+      (currentMultiplier + 1) * intervals
+    );
+
+    if (injectedTime.isBetween(currentTime, nextTime)) {
+      times.push(injectedTimes[i]);
+    }
+  }
+
+  return times;
 }

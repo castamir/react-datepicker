@@ -11,6 +11,7 @@ General datepicker component.
 | `calendarClassName`           | `string`                       |                 |             |
 | `children`                    | `node`                         |                 |             |
 | `className`                   | `string`                       |                 |             |
+| `clearButtonTitle`            | `string`                       |                 |             |
 | `customInput`                 | `element`                      |                 |             |
 | `customInputRef`              | `string`                       |                 |             |
 | `dateFormat`                  | `union(string\|array)`         | `"L"`           |             |
@@ -18,7 +19,7 @@ General datepicker component.
 | `dayClassName`                | `func`                         |                 |             |
 | `disabled`                    | `bool`                         | `false`         |             |
 | `disabledKeyboardNavigation`  | `bool`                         | `false`         |             |
-| `dropdownMode` (required)     | `enum("scroll"\|"select")`     | `"scroll"`      |             |
+| `dropdownMode`                | `enum("scroll"\|"select")`     | `"scroll"`      |             |
 | `endDate`                     | `object`                       |                 |             |
 | `excludeDates`                | `array`                        |                 |             |
 | `excludeTimes`                | `array`                        |                 |             |
@@ -30,6 +31,7 @@ General datepicker component.
 | `id`                          | `string`                       |                 |             |
 | `includeDates`                | `array`                        |                 |             |
 | `includeTimes`                | `array`                        |                 |             |
+| `injectTimes`                 | `array`                        |                 |             |
 | `inline`                      | `bool`                         |                 |             |
 | `isClearable`                 | `bool`                         |                 |             |
 | `locale`                      | `string`                       |                 |             |
@@ -40,7 +42,7 @@ General datepicker component.
 | `monthsShown`                 | `number`                       | `1`             |             |
 | `name`                        | `string`                       |                 |             |
 | `onBlur`                      | `func`                         | `function() {}` |             |
-| `onChange` (required)         | `func`                         | `function() {}` |             |
+| `onChange`                    | `func`                         | `function() {}` |             |
 | `onChangeRaw`                 | `func`                         |                 |             |
 | `onClickOutside`              | `func`                         | `function() {}` |             |
 | `onFocus`                     | `func`                         | `function() {}` |             |
@@ -69,11 +71,13 @@ General datepicker component.
 | `showMonthDropdown`           | `bool`                         |                 |             |
 | `showMonthYearDropdown`       | `bool`                         |                 |             |
 | `showTimeSelect`              | `bool`                         | `false`         |             |
+| `showTimeSelectOnly`          | `bool`                         |                 |             |
 | `showWeekNumbers`             | `bool`                         |                 |             |
 | `showYearDropdown`            | `bool`                         |                 |             |
 | `startDate`                   | `object`                       |                 |             |
 | `startOpen`                   | `bool`                         |                 |             |
 | `tabIndex`                    | `number`                       |                 |             |
+| `timeCaption`                 | `string`                       | `"Time"`        |             |
 | `timeFormat`                  | `string`                       |                 |             |
 | `timeIntervals`               | `number`                       | `30`            |             |
 | `title`                       | `string`                       |                 |             |

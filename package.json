@@ -2,7 +2,7 @@
   "author": "HackerOne",
   "name": "react-datepicker",
   "description": "A simple and reusable datepicker component for React",
-  "version": "1.1.0",
+  "version": "1.4.1",
   "license": "MIT",
   "homepage": "https://github.com/Hacker0x01/react-datepicker",
   "main": "lib",
@@ -44,6 +44,7 @@
     "eslint-plugin-react": "^7.4.0",
     "express": "^4.16.2",
     "extract-text-webpack-plugin": "^1.0.1",
+    "flow-bin": "^0.68.0",
     "highlight.js": "^9.12.0",
     "husky": "^0.14.3",
     "isparta-loader": "^2.0.0",
@@ -58,7 +59,7 @@
     "lint-staged": "^6.0.0",
     "lodash": "^4.17.4",
     "mocha": "^4.0.1",
-    "moment": "^2.19.4",
+    "moment": "^2.20.1",
     "node-sass": "^4.6.0",
     "npm-run-all": "^4.1.2",
     "prettier": "^1.9.2",
@@ -83,7 +84,7 @@
     "webpack-hot-middleware": "^2.20.0"
   },
   "peerDependencies": {
-    "moment": "^2.0.0",
+    "moment": "^2.20.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0"
   },
@@ -91,14 +92,15 @@
     "classnames": "^2.2.5",
     "prop-types": "^15.6.0",
     "react-onclickoutside": "^6.7.1",
-    "react-popper": "^0.7.4"
+    "react-popper": "^0.9.1"
   },
   "scripts": {
     "eslint": "eslint {src,test,docs-site/src}/**/*.{js,jsx} *.js",
+    "flow": "flow",
     "precommit": "lint-staged",
     "sass-lint":
       "sass-lint --config .sass-lint.yml 'src/stylesheets/*.scss, docs-site/src/*.scss' -i 'docs-site/src/higlight.scss, docs-site/src/reset.scss'",
-    "lint": "run-p eslint sass-lint",
+    "lint": "run-p eslint flow sass-lint",
     "start": "cross-env MODULES=false node server.js",
     "test": "cross-env NODE_ENV=test karma start karma.conf.js --single-run",
     "prepublish": "test $(npm -v | tr . '\\n' | head -n 1) -ge '4' || exit 1",
@@ -106,7 +108,9 @@
     "codecov":
       "cat coverage/*/lcov.info | ./node_modules/codecov.io/bin/codecov.io.js",
     "prebuild": "rimraf es lib dist",
-    "build": "run-p build:** && run-p css:**",
+    "build": "cross-env NODE_ENV=production run-p build:** && run-p css:**",
+    "build-dev":
+      "cross-env NODE_ENV=development run-p build:** && run-p css:**",
     "css:prod":
       "node-sass --output-style compressed src/stylesheets/datepicker.scss > dist/react-datepicker.min.css",
     "css:modules:prod":
@@ -119,14 +123,14 @@
       "cross-env BABEL_ENV=es rollup -c -i src/index.jsx -o es/index.js",
     "build:cjs":
       "cross-env BABEL_ENV=cjs rollup -c -i src/index.jsx -o lib/index.js",
-    "build:umd:prod":
-      "cross-env BABEL_ENV=es NODE_ENV=production rollup -c rollup.umd.config.js -i src/index.jsx -o dist/react-datepicker.min.js",
     "build:umd:dev":
-      "cross-env BABEL_ENV=es NODE_ENV=development rollup -c rollup.umd.config.js -i src/index.jsx -o dist/react-datepicker.js",
+      "cross-env BABEL_ENV=es rollup -c rollup.umd.config.js -i src/index.jsx -o dist/react-datepicker.js",
+    "build:umd:prod":
+      "cross-env BABEL_ENV=es rollup -c rollup.umd.config.js -i src/index.jsx -o dist/react-datepicker.min.js",
     "build:docs":
       "cross-env MODULES=false webpack --config webpack.docs.config.js"
   },
   "lint-staged": {
-    "*.{js,json,css,scss,md}": ["prettier --write", "git add"]
+    "*.{js,jsx,json,css,scss,md}": ["prettier --write", "git add"]
   }
 }

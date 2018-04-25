@@ -162,16 +162,29 @@ describe("MonthDropdown", () => {
     });
     // Short Month Names
     it("renders month options with short name and default locale", () => {
-      monthDropdown = getMonthDropdown({dropdownMode: "select", useShortMonthInDropdown: true})
-      var options = monthDropdown.find("option")
+      monthDropdown = getMonthDropdown({
+        dropdownMode: "select",
+        useShortMonthInDropdown: true
+      });
+      var options = monthDropdown.find("option");
       expect(options.map(o => o.text())).to.eql([
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
       ]);
     });
 
     // Failing on Travis CI.
-    xit("renders month options with specified locale", () => {
+    it("renders month options with specified locale", () => {
       monthDropdown = getMonthDropdown({
         dropdownMode: "select",
         locale: "zh-cn"

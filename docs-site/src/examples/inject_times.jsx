@@ -2,13 +2,12 @@ import React from "react";
 import DatePicker from "react-datepicker";
 import moment from "moment";
 
-export default class ShowTime extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      startDate: moment()
-    };
-  }
+export default class InjectTimes extends React.Component {
+  state = {
+    startDate: moment()
+      .hours(16)
+      .minutes(30)
+  };
 
   handleChange = date => {
     this.setState({
@@ -28,9 +27,12 @@ export default class ShowTime extends React.Component {
             <br />
             <strong>{`    showTimeSelect
     timeFormat="HH:mm"
-    timeIntervals={15}
+    injectTimes={[
+      moment().hours(0).minutes(1),
+      moment().hours(12).minutes(5),
+      moment().hours(23).minutes(59)
+    ]}
     dateFormat="LLL"
-    timeCaption="time"
 />
 `}</strong>
           </code>
@@ -41,9 +43,19 @@ export default class ShowTime extends React.Component {
             onChange={this.handleChange}
             showTimeSelect
             timeFormat="HH:mm"
-            timeIntervals={15}
-            timeCaption="time"
-            dateFormat="LLL"/>
+            injectTimes={[
+              moment()
+                .hours(0)
+                .minutes(1),
+              moment()
+                .hours(12)
+                .minutes(5),
+              moment()
+                .hours(23)
+                .minutes(59)
+            ]}
+            dateFormat="LLL"
+          />
         </div>
       </div>
     );

@@ -10,6 +10,7 @@ General datepicker component.
 | `calendarClassName`          | `string`                       |                 |                                            |
 | `children`                   | `node`                         |                 |                                            |
 | `className`                  | `string`                       |                 |                                            |
+| `clearButtonTitle`           | `string`                       |                 |                                            |
 | `customInput`                | `element`                      |                 |                                            |
 | `customInputRef`             | `string`                       | `'ref'`         | The property used to pass the ref callback |
 | `dateFormat`                 | `union(string\|array)`         | `'L'`           |                                            |
@@ -29,6 +30,7 @@ General datepicker component.
 | `id`                         | `string`                       |                 |                                            |
 | `includeDates`               | `array`                        |                 |                                            |
 | `includeTimes`               | `array`                        |                 |                                            |
+| `injectTimes`                | `array`                        |                 |                                            |
 | `inline`                     | `bool`                         |                 |                                            |
 | `isClearable`                | `bool`                         |                 |                                            |
 | `locale`                     | `string`                       |                 |                                            |
